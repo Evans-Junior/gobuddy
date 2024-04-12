@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Booking - Managers Page</title>
+  <link rel="stylesheet" href="../css/managers_page.css">
+
+</head>
+<body>
+
+
+    <header>
+      <a href="../admin/dashboard.php" class="back-button" >&lt; Back</a>
+
+        <h1>Requests</h1>
+        <nav class="navbar">
+          <div class="menu-toggle" onclick="toggleMenu()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+          <ul class="menu" id="menu">
+            <!-- <li><a href="#room-management">Room Management</a></li> -->
+            <!-- <li><a href="#student-assignment">Student Assignment</a></li> -->
+            <!-- <li><a href="#announcements">Announcements</a></li> -->
+            <li><a href="#requests">Student Requests</a></li>
+            <!-- <li><a href="#room-schedule">Room Schedule</a></li> -->
+            <!-- <li><a href="#reports">Reports</a></li> -->
+            <!-- <li><a href="#settings">Settings</a></li> -->
+          </ul>
+        </nav>
+      </header>
+      
+<!-- 
+      
+  
+
+  <div class="container">
+    <section id="room-management">
+      <h2>Room Management</h2>
+      <div class="hostel-selection">
+        <label for="hostel-select">Select Hostel:</label>
+        <select id="hostel-select">
+            <option value="hostel8">Select</option>
+          <option value="hostel1">Hostel 2D</option>
+          <option value="hostel2">Hostel 2C</option>
+          <option value="hostel3">Kofi Tawiah</option>
+          <option value="hostel4">Wangari Mathai</option>
+          <option value="hostel5">Oteng Korankye</option>
+          <option value="hostel6">Efua Sutherland</option>
+          <option value="hostel7">Ephraim Amu</option>
+          <option value="hostel8">Walter Sisulu</option>
+          </select>
+
+      <div class="filter">
+        <label for="room-type-filter">Room Type:</label>
+            <select id="room-type-filter">
+              <option value ="select">Select</option>
+              <option value="4-in-a-room">4-in-a-room</option>
+              <option value="2-in-a-room">2-in-a-room</option>
+            </select>
+
+            <label for="availability-filter">Availability:</label>
+            <select id="availability-filter">
+                <option value="select">Select</option>
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+            </select>
+
+            
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Room Number</th>
+            <th>Bed Count</th>
+            <th>Room Type</th>
+            <th>Current Student</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </section> -->
+
+<!-- 
+    <section id="student-assignment">
+        <h2>Student Assignment</h2>
+      
+        <form id="student-search-form">
+          <label for="student-search">Search Student:</label>
+          <input type="text" id="student-search" placeholder="Enter student name or ID">
+          <button type="submit">Search</button>
+        </form>
+      
+        <div class="student-details">
+            <h3>Student Details</h3>
+            <p><strong>Name:</strong> <span id="student-name">Dave Sampah</span></p>
+            <p><strong>ID:</strong> <span id="student-id">123456</span></p>
+            <p><strong>Program:</strong> <span id="student-program">Computer Science</span></p>
+        </div>
+
+        <form id="room-assignment-form">
+            <div class="hostel-selection">
+                <label for="hostel-select">Select Hostel:</label>
+                <select id="hostel-select">
+                    <option value="hostel8">Select</option>
+                  <option value="hostel1">Hostel 2D</option>
+                  <option value="hostel2">Hostel 2C</option>
+                  <option value="hostel3">Kofi Tawiah</option>
+                  <option value="hostel4">Wangari Mathai</option>
+                  <option value="hostel5">Oteng Korankye</option>
+                  <option value="hostel6">Efua Sutherland</option>
+                  <option value="hostel7">Ephraim Amu</option>
+                  <option value="hostel8">Walter Sisulu</option>
+                  </select>
+          </select>
+      
+        <div class="available-rooms">
+            <h3>Available Rooms</h3>
+            <select id="room-list">
+                <option value="Select"> Select</option>
+                <option value="room1">Room 1</option>
+                <option value="room2">Room 2</option>
+                <option value="room2">Room 3</option>
+                <option value="room2">Room 4</option>
+                <option value="room2">Room 5</option>
+            </select>
+        </div>
+
+          <button type="submit">Assign Room</button>
+        </form>
+      
+        <div id="assignment-confirmation">
+        </div>
+      </section>
+       -->
+
+
+
+    <!-- <section id="announcements">
+        <h2>Announcements</h2>
+      
+        <div id="announcement-list">
+          <div class="announcement">
+            <p class="announcement-text">Welcome to the hostel booking system!</p>
+            <p class="announcement-date">Posted on: January 25, 2024</p>
+          </div>
+        </div>
+      
+        <form id="announcement-form">
+          <label for="announcement-text">New Announcement:</label>
+          <textarea id="announcement-text" rows="4" cols="50" placeholder="Enter your announcement here"></textarea>
+          <button type="submit">Post Announcement</button>
+        </form>
+      </section> -->
+      
+      <!-- <section id="requests">
+        <h2>Student Requests</h2>
+      
+        Display student requests here
+        <div id="request-list">
+          Requests will be dynamically generated here
+        </div>
+      
+        Form to resolve requests
+        <form id="resolve-request-form">
+          <h3>Resolve Request</h3>
+          <div class="form-group">
+            <label for="request-id">Request ID:</label>
+            <input type="text" id="request-id" placeholder="Enter request ID">
+          </div>
+          <div class="form-group">
+            <label for="resolution">Resolution:</label>
+            <textarea id="resolution" rows="4" cols="50" placeholder="Enter resolution"></textarea>
+          </div>
+          <button type="submit">Resolve Request</button>
+        </form>
+      </section>
+       -->
+
+
+
+<section id="requests">
+  <h2>Student Requests</h2>
+
+  <div id="request-list">
+    <ul>
+      <li><a href="#" onclick="showRequest('Request 1')">Emergency Maintenance Needed in Hostel 2C</a></li>
+      <li><a href="#" onclick="showRequest('Request 2')">Complaint Regarding Noisy Neighbors in Room 304</a></li>
+      <li><a href="#" onclick="showRequest('Request 3')">Notification of Plumbing Issue in Bathroom Stall 2</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- Pop-up form to display the entire request message -->
+<!-- <div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeRequestPopup()">&times;</span>
+    <h3 id="request-title"></h3>
+    <p id="request-message"></p>
+  </div>
+</div> -->
+
+<script>
+  // Function to show request details in a pop-up
+  function showRequest(title) {
+    // Get the corresponding request message based on title (this data can be fetched dynamically)
+    var requestMessage = getRequestMessage(title);
+
+    // Update pop-up content with request title and message
+    document.getElementById("request-title").innerText = title;
+    document.getElementById("request-message").innerText = requestMessage;
+
+    // Display the pop-up
+    var overlay = document.getElementById("modalOverlay");
+    overlay.style.display = "block";
+  }
+
+  // Function to close the pop-up
+  function closeRequestPopup() {
+    var overlay = document.getElementById("modalOverlay");
+    overlay.style.display = "none";
+  }
+
+  // Mock function to fetch request message based on title (replace with actual data retrieval logic)
+  function getRequestMessage(title) {
+    // This is just a mock data, replace it with actual data retrieval logic
+    if (title === "Request 1") {
+      return "Dear Hostel Management, I am writing to urgently request maintenance assistance in our hostel. There seems to be a leak in the ceiling of the common area, and it's causing water to drip onto the floor. This poses a safety hazard and requires immediate attention. Please send maintenance staff to address the issue as soon as possible. Thank you.";
+    } else if (title === "Request 2") {
+      return "Hello, I hope this message finds you well. I wanted to bring to your attention the ongoing issue of excessive noise coming from the neighboring room, Room 304. The noise levels have been disrupting my studies and sleep patterns, making it difficult to focus on my academic responsibilities. I kindly request that you address this matter with the occupants of Room 304 to ensure a more conducive living environment for all residents. Thank you for your prompt attention to this matter.";
+    } else if (title === "Request 3") {
+      return "Greetings, I wanted to inform you about a plumbing issue that needs attention in Bathroom Stall 2. There appears to be a clog in the toilet, causing it to overflow intermittently. This has led to inconvenience for residents and poses a sanitation concern. I kindly request that maintenance personnel investigate and resolve the issue at the earliest convenience. Thank you for your assistance.";
+    } else {
+      return "No message available for this request.";
+    }
+  }
+</script>
+
+      
+      
+
+
+
+
+
+
+
+      <!-- <section id="room-schedule">
+        <h2>Room Schedule</h2> -->
+        <!-- Display room schedule here -->
+        <!-- <div id="schedule-list"> -->
+          <!-- Room schedule will be dynamically generated here -->
+        <!-- </div> -->
+      
+        <!-- Form to manage room schedule -->
+        <!-- <form id="manage-schedule-form">
+          <label for="room-id">Room No.:</label>
+          <input type="text" id="room-id" placeholder="Enter room number">
+          <label for="start-time">Start Time:</label>
+          <input type="datetime-local" id="start-time">
+          <label class="endTime" for="end-time">End Time:</label>
+          <input type="datetime-local" id="end-time">
+          <button type="submit">Update Schedule</button>
+        </form>
+      </section> -->
+      
+
+<!-- 
+      <section id="reports">
+        <h2>Reports</h2> -->
+        
+        <!-- Report options and date range picker here -->
+        <!-- <div class="report-options">
+          <label for="date-range">Select Date Range:</label>
+          <input type="date" id="start-date">
+          <label for="end-date">to</label>
+          <input type="date" id="end-date">
+        </div> -->
+        
+        <!-- Occupancy report chart/table will be displayed here -->
+        <!-- <div class="occupancy-report">
+          <h3>Occupancy Report</h3>
+          <canvas id="occupancy-chart" width="400" height="200"></canvas> -->
+          <!-- Include JavaScript to generate occupancy chart -->
+        <!-- </div> -->
+        
+        <!-- Maintenance report list will be displayed here -->
+        <!-- <div class="maintenance-report">
+          <h3>Maintenance Report</h3>
+          <ul>
+            <li>Room 101: Leak fixed</li>
+            <li>Room 102: Light bulb replaced</li> -->
+            <!-- Additional maintenance items can be listed here -->
+          <!-- </ul>
+        </div>
+        
+        <button id="download-reports-btn">Download Reports</button>
+      </section>
+      
+    
+    </section>
+  </div> -->
+
+  <footer>
+    <p>&copy; 2024 AsBeD Hostel Booking System</p>
+  </footer>
+
+  <script src="../js/managers_page.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

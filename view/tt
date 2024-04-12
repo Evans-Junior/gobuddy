@@ -1,0 +1,166 @@
+<div id="tripDetailsDialog" class="dialog">
+    <div class="dialog-content">
+        <span class="close">&times;</span>
+        <h2 id="tripName"></h2>
+        <p><strong>Date:</strong> <span id="tripDate"></span></p>
+        <p><strong>Start Time:</strong> <span id="tripStartTime"></span></p>
+        <p><strong>End Time:</strong> <span id="tripEndTime"></span></p>
+        <h3>People on the Trip:</h3>
+        <ul id="tripParticipants"></ul>
+        <button id="cancelTripButton">Cancel Trip</button>
+    </div>
+</div>
+
+/* Style for dialog container */
+.dialog {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Style for dialog content */
+.dialog-content {
+    background-color: #f0f0f0;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 5px;
+    position: relative;
+}
+
+/* Close button style */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Button style */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+
+// Open the dialog
+function openDialog() {
+    document.getElementById("tripDetailsDialog").style.display = "block";
+}
+
+// Close the dialog
+function closeDialog() {
+    document.getElementById("tripDetailsDialog").style.display = "none";
+}
+
+// Example function to populate trip details
+function populateTripDetails(trip) {
+    document.getElementById("tripName").textContent = trip.Destination;
+    document.getElementById("tripDate").textContent = trip.Date;
+    document.getElementById("tripStartTime").textContent = trip.StartTime;
+    document.getElementById("tripEndTime").textContent = trip.EndTime;
+    
+    // Assume tripParticipants is an array of participants
+    var participantsList = document.getElementById("tripParticipants");
+    participantsList.innerHTML = "";
+    trip.Participants.forEach(function(participant) {
+        var listItem = document.createElement("li");
+        listItem.textContent = participant;
+        
+        var removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", function() {
+            // Implement remove participant functionality
+            alert("Remove participant: " + participant);
+        });
+        
+        listItem.appendChild(removeButton);
+        participantsList.appendChild(listItem);
+    });
+    
+    // Example cancel trip button click event
+    document.getElementById("cancelTripButton").addEventListener("click", function() {
+        // Implement cancel trip functionality here
+        alert("Cancel Trip");
+    });
+}
+
+// Example usage:
+var trip = {
+    Destination: "Trip to Beach",
+    Date: "2024-03-15",
+    StartTime: "10:00 AM",
+    EndTime: "4:00 PM",
+    Participants: ["John Doe", "Jane Smith", "Alice Johnson"]
+};
+
+populateTripDetails(trip);
+openDialog();
+
+
+
+echo "<div class='card' onclick='getUserInfo({$trip['UserID']})'>
+    <h5>{$trip['Destination']}</h5>
+    <p>Date: {$trip['Date']}</p>
+    <p>Location: {$trip['Location']}</p>
+    <p>Buddy: {$trip['Username']}</p>
+    <div class='details'>
+    <p>Start: <strong>{$trip['Start']}</strong></p>
+    <p>End: <strong>{$trip['End']}</strong></p>
+    <p>Seats:<strong id='tripseats'>{$trip['SeatsAvailable']}</strong></p>
+    <input type='hidden' id='UserInfo' value='{$trip['UserID']}'>
+    <input type='hidden' class='tripID' value='{$trip['TripID']}'>
+    </div>
+    <div style='display:flex; gap: 7px; '>
+
+    <button onclick='openReviewPopup({$trip['TripID']}, {$trip['UserID']})'>Review</button>    
+    <button>Delete</button>    
+    </div>
+    </div>";
+
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px; /* Add padding for space inside the card */
+    width: 100%;
+    background-color: #ffffff; /* Set background color to white */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add box shadow for visual separation */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    justify-content: center;
+    align-items: center;b3d3f4
+
+
+    create a getLastmessage function which would run if totalmessages is smaller than the reponse.messages it gets from the         
+url: '../functions/fetch_messages.php',
+ type: 'POST',
+        dataType: 'json',
+        data: { userId: userId }, 
+
+It then adds the last number of messages it has as difference from the reponse and add it in 

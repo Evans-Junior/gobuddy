@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuddyGo - Share Rides, Save Costs</title>
+    <link rel="stylesheet" href="../css/color_sheme.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fbfbfe; /* Light background */
+            color: #04040b; /* Dark text */
+            text-align: center;
+            line-height: 1.6;
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+            overflow-y: auto;
+            height: calc(100vh - 400px); /* Adjust as needed */
+
+        }
+        
+.body::-webkit-scrollbar {
+    width: 5px; /* Set the width of the scrollbar */
+}
+
+.body::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+.body::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 5px; /* Round the corners of the scrollbar thumb */
+}
+
+        .navbar {
+            width: 100vw;
+            height: 60px; /* Navbar height */
+            /* background-color: #2e2ed4; Primary color */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            z-index: 999; /* Ensure navbar is above other content */
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #2e2ed4; /* White text */ 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0px auto 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fbfbfe; /* Primary color */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            height: calc(100vh - 400px); /* Adjust as needed */
+
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #0b0b12; /* Dark text */
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fbfbfe; /* White text */
+            background-color: #7b7beb; /* Secondary color */
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #5959ef; /* Accent color */
+        }
+
+        .features {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            width: 30%;
+            margin: 20px;
+            padding: 20px;
+            background-color: #ffffff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .feature h2 {
+            color: #2e2ed4; /* Primary color */
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 50px auto;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+            .feature {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">GoBuddy</div>
+    </div>
+    <div class="container">
+        <h1>Welcome to GoBuddy</h1>
+        <p>Connecting people, sharing rides, and making travel fun!</p>
+        <a href="../login/login_view.php" class="btn">About Us</a>
+        <a href="../login/login_view.php" class="btn">Sign In</a>
+        <a href="../login/register_view.php" class="btn">Sign Up</a>
+        <div class="features">
+            <div class="feature">
+                <h2>Cost Saving</h2>
+                <p>Save money by sharing the cost of travel with others going your way.</p>
+            </div>
+            <div class="feature">
+                <h2>Community Building</h2>
+                <p>Meet new people, build friendships, and expand your social network.</p>
+            </div>
+            <div class="feature">
+                <h2>Safety First</h2>
+                <p>Feel secure knowing that you're traveling with verified members of your community.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

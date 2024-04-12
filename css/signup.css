@@ -1,0 +1,110 @@
+.input-group {
+    position: relative;
+    display: inline-block; /* Added */
+    width: 100%; /* Added */
+}
+
+.input-group input[type="password"] {
+    width: calc(100% - 20px); /* Adjusted width */
+}
+
+.input-group input[type="text"] {
+  width: calc(100% - 20px); /* Adjusted width */
+}
+  .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust as needed */
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .password-toggle i {
+    color: #999;
+  }
+  
+  .password-toggle i:hover {
+    color: #333;
+  }
+
+  .fas{
+    position: absolute;
+    right: 10px;
+    bottom: 20px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fbfbfe;
+    color: #04040b;
+    text-align: center;
+}
+
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #2e2ed4;
+}
+
+p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+textarea[type="text"] {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+textarea[type="text"]{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5959ef;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2e2ed4;
+}
+
+p a {
+    color: #2e2ed4;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
