@@ -5,7 +5,7 @@
 // $PASSWORD= 'cs341webtech';
 // $DATABASE='ALEA2025';
 
-$SERVER= 'localhost';
+$SERVER= 'localhost:3306';
 $USERNAME= 'root';
 $PASSWORD= '    ';
 $DATABASE='goBuddy';
