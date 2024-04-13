@@ -2,8 +2,8 @@
 session_start();
 include '../settings/connection.php';
 
-// Initialize associative array to store UserIDs and corresponding usernames for each trip ID
-$usernamesByTripId = [];
+// Initialize associative array to store UserIDs and corresponding usernames
+$usernamesByUserId = [];
 
 try {
     // Verify session user ID
@@ -31,32 +31,32 @@ try {
     $stmtTripIds->close();
 
     // Step 2: Get usernames associated with the obtained trip IDs
-    foreach ($tripIds as $tripId) {
-        $usernamesQuery = "SELECT DISTINCT u.UserID, u.Username
-                           FROM Users u
-                           JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                           WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID = ?";
+    $usernamesQuery = "SELECT DISTINCT u.UserID AS RequesterUserID, u.Username AS RequesterUsername, 
+                               t.UserID AS TripUserID, t.Username AS TripUsername
+                       FROM Users u
+                       JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
+                       JOIN Trips t ON tr.TripID = t.TripID
+                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
 
-        $stmtUsernames = $con->prepare($usernamesQuery);
-        $stmtUsernames->bind_param('i', $tripId);
-        $stmtUsernames->execute();
-        $resultUsernames = $stmtUsernames->get_result();
+    $stmtUsernames = $con->prepare($usernamesQuery);
+    $stmtUsernames->execute();
+    $resultUsernames = $stmtUsernames->get_result();
 
-        $usernamesForTrip = [];
-        while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-            $usernamesForTrip[$rowUsernames['UserID']] = $rowUsernames['Username'];
-        }
-
-        // Store usernames for the current trip ID
-        $usernamesByTripId[$tripId] = $usernamesForTrip;
-
-        $stmtUsernames->close();
+    $usernames = [];
+    while ($rowUsernames = $resultUsernames->fetch_assoc()) {
+        // Store usernames in an array
+        $usernames[] = [
+            'RequesterUserID' => $rowUsernames['RequesterUserID'],
+            'RequesterUsername' => $rowUsernames['RequesterUsername'],
+            'TripUserID' => $rowUsernames['TripUserID'],
+            'TripUsername' => $rowUsernames['TripUsername']
+        ];
     }
 
-    // Prepare response with success flag and the associative array of TripIDs and associated UserIDs with usernames
+    // Prepare response with success flag and the array of usernames
     $response = [
         'success' => true,
-        'usernames' => $usernamesByTripId
+        'usernames' => $usernames
     ];
 
     echo json_encode($response);
