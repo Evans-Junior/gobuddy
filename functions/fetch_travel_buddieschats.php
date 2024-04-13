@@ -12,52 +12,36 @@ try {
     }
 
     $userId = $_SESSION['user_id'];
-    $tripId = $_POST['tripID']; // Assuming you're passing the tripID through POST
 
-    // Step 1: Find UserIDs of trip creators for accepted trips in TripRequests
-    $tripCreatorQuery = "SELECT DISTINCT u.UserID, u.Username
-                         FROM Users u
-                         JOIN Trips t ON u.UserID = t.UserID
-                         JOIN TripRequests tr ON t.TripID = tr.TripID
-                         WHERE (tr.Status = 'Accepted' OR tr.Status = 'Completed' OR tr.Status = 'Deleted') AND t.TripID = ?";
+    // Step 1: Get all trip IDs for trips the user is involved in either as creator or requester
+    $tripIdsQuery = "SELECT DISTINCT t.TripID
+                     FROM Trips t
+                     JOIN TripRequests tr ON t.TripID = tr.TripID
+                     WHERE t.UserID = ? OR tr.RequesterUserID = ?";
 
-    $stmtTripCreator = $con->prepare($tripCreatorQuery);
-    $stmtTripCreator->bind_param('i', $tripId);
-    $stmtTripCreator->execute();
-    $resultTripCreator = $stmtTripCreator->get_result();
+    $stmtTripIds = $con->prepare($tripIdsQuery);
+    $stmtTripIds->bind_param('ii', $userId, $userId);
+    $stmtTripIds->execute();
+    $resultTripIds = $stmtTripIds->get_result();
 
-    while ($rowTripCreator = $resultTripCreator->fetch_assoc()) {
-        $usernamesByUserId[$rowTripCreator['UserID']] = $rowTripCreator['Username'];
+    $tripIds = [];
+    while ($rowTripIds = $resultTripIds->fetch_assoc()) {
+        $tripIds[] = $rowTripIds['TripID'];
     }
+    $stmtTripIds->close();
 
-    // Step 2: Find UserIDs whose trip requests have been accepted by the session user
-    $acceptedRequestsQuery = "SELECT DISTINCT u.UserID, u.Username
-                              FROM Users u
-                              JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                              WHERE (tr.Status = 'Accepted' OR tr.Status = 'Completed' OR tr.Status = 'Deleted') AND tr.TripID = ?";
+    // Step 2: Get usernames associated with the obtained trip IDs
+    $usernamesQuery = "SELECT DISTINCT u.UserID, u.Username
+                       FROM Users u
+                       JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
+                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
 
-    $stmtAcceptedRequests = $con->prepare($acceptedRequestsQuery);
-    $stmtAcceptedRequests->bind_param('i', $tripId);
-    $stmtAcceptedRequests->execute();
-    $resultAcceptedRequests = $stmtAcceptedRequests->get_result();
+    $stmtUsernames = $con->prepare($usernamesQuery);
+    $stmtUsernames->execute();
+    $resultUsernames = $stmtUsernames->get_result();
 
-    while ($rowAcceptedRequests = $resultAcceptedRequests->fetch_assoc()) {
-        $usernamesByUserId[$rowAcceptedRequests['UserID']] = $rowAcceptedRequests['Username'];
-    }
-
-    // Step 3: Find other requesters of the same trip for the session user
-    $tripRequestersQuery = "SELECT DISTINCT u.UserID, u.Username
-                            FROM Users u
-                            JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                            WHERE (tr.Status = 'Accepted' OR tr.Status = 'Completed' OR tr.Status = 'Deleted') AND tr.TripID = ? AND tr.RequesterUserID != ?";
-
-    $stmtTripRequesters = $con->prepare($tripRequestersQuery);
-    $stmtTripRequesters->bind_param('ii', $tripId, $userId);
-    $stmtTripRequesters->execute();
-    $resultTripRequesters = $stmtTripRequesters->get_result();
-
-    while ($rowTripRequester = $resultTripRequesters->fetch_assoc()) {
-        $usernamesByUserId[$rowTripRequester['UserID']] = $rowTripRequester['Username'];
+    while ($rowUsernames = $resultUsernames->fetch_assoc()) {
+        $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
