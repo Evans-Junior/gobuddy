@@ -14,7 +14,7 @@ try {
     $userId = $_SESSION['user_id'];
 
     // Step 1: Get all trip IDs for trips the user is involved in either as creator or requester
-    $tripIdsQuery = "SELECT DISTINCT t.TripID, t.UserID AS TripUserID
+    $tripIdsQuery = "SELECT DISTINCT t.TripID
                      FROM Trips t
                      JOIN TripRequests tr ON t.TripID = tr.TripID
                      WHERE t.UserID = ? OR tr.RequesterUserID = ?";
@@ -25,10 +25,9 @@ try {
     $resultTripIds = $stmtTripIds->get_result();
 
     $tripIds = [];
-    $tripUserIds = []; // Array to store TripUserID
+    
     while ($rowTripIds = $resultTripIds->fetch_assoc()) {
         $tripIds[] = $rowTripIds['TripID'];
-        $tripUserIds[$rowTripIds['TripID']] = $rowTripIds['TripUserID']; // Store TripUserID with TripID
     }
     $stmtTripIds->close();
 
@@ -37,7 +36,7 @@ try {
                        FROM Users u
                        JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
                        JOIN Trips t ON tr.TripID = t.TripID
-                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
+                       WHERE (tr.Status IN ('Accepted', 'Completed', 'Deleted') OR t.TripStatus = 'Active'))AND tr.TripID IN (".implode(",", $tripIds).")";
 
     $stmtUsernames = $con->prepare($usernamesQuery);
     $stmtUsernames->execute();
@@ -45,19 +44,17 @@ try {
     
 
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        // Check if TripUserID is not equal to the session user ID
-        if ($tripUserIds[$rowUsernames['UserID']] != $_SESSION['user_id']) {
-            // Add TripUserID and its corresponding username to the array
-            $usernamesByUserId[$tripUserIds[$rowUsernames['UserID']]] = $rowUsernames['TripUsername'];
-        }
-        // Add RequesterUserID and its corresponding username to the array
+        // Assign usernames to the associative array using UserID as key
         $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
+
+    $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
+
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
     $response = [
         'success' => true,
-        'usernames' => $usernamesByUserId
+        'usernames' => $usernamesByUserId,
     ];
 
     echo json_encode($response);
