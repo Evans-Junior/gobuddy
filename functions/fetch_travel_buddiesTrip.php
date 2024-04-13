@@ -39,7 +39,7 @@ try {
     $acceptedRequestsQuery = "SELECT DISTINCT u.UserID, u.Username
                               FROM Users u
                               JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                              WHERE tr.Status = 'Accepted' AND tr.TripID = ?";
+                              WHERE tr.Status = 'Completed' AND tr.TripID = ?";
 
     $stmtAcceptedRequests = $con->prepare($acceptedRequestsQuery);
     $stmtAcceptedRequests->bind_param('i', $tripId);
@@ -54,7 +54,7 @@ try {
     $tripRequestersQuery = "SELECT DISTINCT u.UserID, u.Username
                             FROM Users u
                             JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                            WHERE tr.Status IN ('Completed',''  AND tr.TripID = ? AND tr.RequesterUserID != ?";
+                            WHERE tr.Status IN ('Completed','Accepted')  AND tr.TripID = ? AND tr.RequesterUserID != ?";
 
     $stmtTripRequesters = $con->prepare($tripRequestersQuery);
     $stmtTripRequesters->bind_param('ii', $tripId, $userId);
