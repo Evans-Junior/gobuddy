@@ -1,5 +1,3 @@
-php
-Copy code
 <?php
 session_start();
 include '../settings/connection.php';
