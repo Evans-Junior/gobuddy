@@ -2,8 +2,8 @@
 session_start();
 include '../settings/connection.php';
 
-// Initialize associative array to store UserIDs and corresponding usernames
-$usernamesByUserId = [];
+// Initialize associative array to store UserIDs and corresponding usernames for each trip ID
+$usernamesByTripId = [];
 
 try {
     // Verify session user ID
@@ -31,24 +31,32 @@ try {
     $stmtTripIds->close();
 
     // Step 2: Get usernames associated with the obtained trip IDs
-    $usernamesQuery = "SELECT DISTINCT u.UserID, u.Username
-                       FROM Users u
-                       JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
+    foreach ($tripIds as $tripId) {
+        $usernamesQuery = "SELECT DISTINCT u.UserID, u.Username
+                           FROM Users u
+                           JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
+                           WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID = ?";
 
-    $stmtUsernames = $con->prepare($usernamesQuery);
-    $stmtUsernames->execute();
-    $resultUsernames = $stmtUsernames->get_result();
+        $stmtUsernames = $con->prepare($usernamesQuery);
+        $stmtUsernames->bind_param('i', $tripId);
+        $stmtUsernames->execute();
+        $resultUsernames = $stmtUsernames->get_result();
 
-    while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        // Assign usernames to the associative array using UserID as key
-        $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
+        $usernamesForTrip = [];
+        while ($rowUsernames = $resultUsernames->fetch_assoc()) {
+            $usernamesForTrip[$rowUsernames['UserID']] = $rowUsernames['Username'];
+        }
+
+        // Store usernames for the current trip ID
+        $usernamesByTripId[$tripId] = $usernamesForTrip;
+
+        $stmtUsernames->close();
     }
 
-    // Prepare response with success flag and the associative array of UserIDs and usernames
+    // Prepare response with success flag and the associative array of TripIDs and associated UserIDs with usernames
     $response = [
         'success' => true,
-        'usernames' => $usernamesByUserId
+        'usernames' => $usernamesByTripId
     ];
 
     echo json_encode($response);
