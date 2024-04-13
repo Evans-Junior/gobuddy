@@ -41,13 +41,13 @@ try {
     $resultUsernames = $stmtUsernames->get_result();
 
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
+        $usernamesByUserId[] = $rowUsernames['Username'];
     }
 
-    // Prepare response with success flag and the associative array of UserIDs and usernames
+    // Prepare response with success flag and the indexed array of usernames
     $response = [
         'success' => true,
-        'usernames' => array_values($usernamesByUserId) // Convert associative array to indexed array
+        'usernames' => $usernamesByUserId
     ];
 
     echo json_encode($response);
