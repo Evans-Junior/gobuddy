@@ -1164,7 +1164,7 @@ function getCommunity() {
                     userDiv.onclick = function() {
                         getMessages(userId, username);
                         console.log('username:', username);
-                    
+                    };
 
                     var userIcon = document.createElement('img');
                     userIcon.src = '../assets/icons/man.png'; // Placeholder icon
@@ -1181,7 +1181,6 @@ function getCommunity() {
 
                     buddiesContainer.appendChild(userDiv);
                     }
-                };
                 });
             } else {
                 console.error('Invalid or unsuccessful response:', response);
