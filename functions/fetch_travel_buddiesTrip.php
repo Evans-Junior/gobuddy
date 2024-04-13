@@ -27,6 +27,7 @@ try {
     $resultTripCreator = $stmtTripCreator->get_result();
 
     while ($rowTripCreator = $resultTripCreator->fetch_assoc()) {
+        // Assign usernames to the associative array using UserID as key
         $usernamesByUserId[$rowTripCreator['UserID']] = $rowTripCreator['Username'];
     }
 
@@ -42,6 +43,7 @@ try {
     $resultAcceptedRequests = $stmtAcceptedRequests->get_result();
 
     while ($rowAcceptedRequests = $resultAcceptedRequests->fetch_assoc()) {
+        // Assign usernames to the associative array using UserID as key
         $usernamesByUserId[$rowAcceptedRequests['UserID']] = $rowAcceptedRequests['Username'];
     }
 
@@ -57,6 +59,7 @@ try {
     $resultTripRequesters = $stmtTripRequesters->get_result();
 
     while ($rowTripRequester = $resultTripRequesters->fetch_assoc()) {
+        // Assign usernames to the associative array using UserID as key
         $usernamesByUserId[$rowTripRequester['UserID']] = $rowTripRequester['Username'];
     }
 
