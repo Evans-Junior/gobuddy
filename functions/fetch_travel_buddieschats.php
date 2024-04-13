@@ -48,7 +48,7 @@ try {
         $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
 
-    $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
+    // $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
 
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
