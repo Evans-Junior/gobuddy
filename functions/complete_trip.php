@@ -1,10 +1,9 @@
 <?php
-session_start(); // Start the session if not already started
+session_start();
 include '../settings/connection.php';
 
-// Check if tripID is provided in the POST request
-if (isset($_POST['tripID'])) {
-    $tripID = $_POST['tripID'];
+function updateTripStatus($tripID) {
+    global $con;
 
     // Update the TripStatus and TimeCreated for the specified trip in Trips table
     $updateTripQuery = "UPDATE Trips 
@@ -12,55 +11,57 @@ if (isset($_POST['tripID'])) {
                             TimeCreated = CURRENT_TIMESTAMP
                         WHERE TripID = ?";
 
-    // Use prepared statement to prevent SQL injection for Trips table
     $stmtTrip = $con->prepare($updateTripQuery);
     $stmtTrip->bind_param('i', $tripID);
 
-    // Execute the update query for Trips
-    if ($stmtTrip->execute()) {
-        // Check if any rows were affected (query was successful)
-        if ($stmtTrip->affected_rows > 0) {
-            // Update TripRequests status to 'Completed' for the specified trip in TripRequests table
-            $updateRequestsQuery = "UPDATE TripRequests 
-                                    SET Status = 'Completed' 
-                                    WHERE TripID = ? 
-                                    AND Status = 'Accepted'";
+    if ($stmtTrip->execute() && $stmtTrip->affected_rows > 0) {
+        $stmtTrip->close();
+        return true;
+    } else {
+        $stmtTrip->close();
+        return false;
+    }
+}
 
-            // Use prepared statement for TripRequests table
-            $stmtRequests = $con->prepare($updateRequestsQuery);
-            $stmtRequests->bind_param('i', $tripID);
+function updateTripRequestsStatus($tripID) {
+    global $con;
 
-            // Execute the update query for TripRequests
-            if ($stmtRequests->execute()) {
-                // Check if any rows were affected (query was successful)
-                if ($stmtRequests->affected_rows > 0) {
-                    // Send success response back to the frontend
-                    echo json_encode(['success' => true]);
-                } else {
-                    // No rows were updated in TripRequests
-                    echo json_encode(['success' => false, 'error' => 'No trip requests found for the specified trip']);
-                }
-            } else {
-                // Error occurred while updating TripRequests
-                echo json_encode(['success' => false, 'error' => 'Error updating TripRequests']);
-            }
+    // Update TripRequests status to 'Completed' for the specified trip in TripRequests table
+    $updateRequestsQuery = "UPDATE TripRequests 
+                            SET Status = 'Completed' 
+                            WHERE TripID = ? 
+                            AND Status = 'Accepted'";
 
-            // Close TripRequests statement
-            $stmtRequests->close();
+    $stmtRequests = $con->prepare($updateRequestsQuery);
+    $stmtRequests->bind_param('i', $tripID);
+
+    if ($stmtRequests->execute() && $stmtRequests->affected_rows > 0) {
+        $stmtRequests->close();
+        return true;
+    } else {
+        $stmtRequests->close();
+        return false;
+    }
+}
+
+// Check if tripID is provided in the POST request
+if (isset($_POST['tripID'])) {
+    $tripID = $_POST['tripID'];
+
+    $tripUpdated = updateTripStatus($tripID);
+    if ($tripUpdated) {
+        $requestsUpdated = updateTripRequestsStatus($tripID);
+        if ($requestsUpdated) {
+            echo json_encode(['success' => true]);
         } else {
-            // No rows were updated in Trips
-            echo json_encode(['success' => false, 'error' => 'No trip found with the specified ID']);
+            echo json_encode(['success' => false, 'error' => 'Error updating TripRequests']);
         }
     } else {
-        // Error occurred while updating Trips
-        echo json_encode(['success' => false, 'error' => 'Error updating trip status']);
+        echo json_encode(['success' => false, 'error' => 'No trip found with the specified ID']);
     }
-
-    // Close the database connection and Trips statement
-    $stmtTrip->close();
-    $con->close();
 } else {
-    // tripID was not provided in the POST request
     echo json_encode(['success' => false, 'error' => 'Trip ID not provided']);
 }
+
+$con->close();
 ?>
