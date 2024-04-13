@@ -26,9 +26,10 @@ try {
     $stmtTripCreator->execute();
     $resultTripCreator = $stmtTripCreator->get_result();
 
+    // Populate indexed array with usernames
+    $usernames = [];
     while ($rowTripCreator = $resultTripCreator->fetch_assoc()) {
-        // Assign usernames to the associative array using UserID as key
-        $usernamesByUserId[$rowTripCreator['UserID']] = $rowTripCreator['Username'];
+        $usernames[] = $rowTripCreator['Username'];
     }
 
     // Step 2: Find UserIDs whose trip requests have been accepted by the session user
@@ -42,9 +43,9 @@ try {
     $stmtAcceptedRequests->execute();
     $resultAcceptedRequests = $stmtAcceptedRequests->get_result();
 
+    // Add usernames to the indexed array
     while ($rowAcceptedRequests = $resultAcceptedRequests->fetch_assoc()) {
-        // Assign usernames to the associative array using UserID as key
-        $usernamesByUserId[$rowAcceptedRequests['UserID']] = $rowAcceptedRequests['Username'];
+        $usernames[] = $rowAcceptedRequests['Username'];
     }
 
     // Step 3: Find other requesters of the same trip for the session user
@@ -58,9 +59,14 @@ try {
     $stmtTripRequesters->execute();
     $resultTripRequesters = $stmtTripRequesters->get_result();
 
+    // Add usernames to the indexed array
     while ($rowTripRequester = $resultTripRequesters->fetch_assoc()) {
-        // Assign usernames to the associative array using UserID as key
-        $usernamesByUserId[$rowTripRequester['UserID']] = $rowTripRequester['Username'];
+        $usernames[] = $rowTripRequester['Username'];
+    }
+
+    // Convert indexed array to associative array with user IDs as keys
+    foreach ($usernames as $username) {
+        $usernamesByUserId[array_search($username, $usernames)] = $username;
     }
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
