@@ -1091,7 +1091,7 @@ function sendMessage() {
         },
         error: function(xhr, status, error) {
             console.error('Error sending message:', error);
-            alert('An error occurred while sending the message.');
+            // alert('An error occurred while sending the message.');
         }
     });
 }
@@ -1149,9 +1149,11 @@ function getCommunity() {
                     buddiesContainer.appendChild(noBuddies);
                     return;
                 }
+                console.log('Usernames by user ID:', usernamesByUserId);
 
                 // Iterate over the usernamesByUserId object
                 Object.entries(usernamesByUserId).forEach(([userId, username]) => {
+                    console.log('User ID:', userId);
                     if (userId != currentUserId) {
 
                     var userDiv = document.createElement('div');
