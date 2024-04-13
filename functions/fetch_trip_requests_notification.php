@@ -24,7 +24,7 @@ JOIN
 Users AS TripOwnerUser ON Trips.UserID = TripOwnerUser.UserID
 WHERE 
 TripRequests.TimeCreated < NOW() 
-AND (Trips.TripStatus = 'Active' and TripRequests.Status = 'Pending' or TripRequests.Status = 'Rejected' or TripRequests.Status = 'Accepted' )
+AND Trips.TripStatus = 'Active'( and TripRequests.Status = 'Pending' or TripRequests.Status = 'Rejected' or TripRequests.Status = 'Accepted' )
 ORDER BY 
 TripRequests.TimeCreated DESC;" ;
 
