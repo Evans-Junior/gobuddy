@@ -31,16 +31,18 @@ if (!$tripCreatorID) {
 if ($userID == $tripCreatorID) {
     // User is the creator of the trip, update TripStatus to 'Deleted' in Trips table
     $updateQuery = "UPDATE Trips SET TripStatus = 'Deleted' WHERE TripID = ?";
+    $stmt = $con->prepare($updateQuery);
+    $stmt->bind_param('i', $tripID);
+    $result = $stmt->execute();
+    $stmt->close();
 } else {
     // User is not the creator, change the Status of TripRequests with the same tripID
     $updateQuery = "UPDATE TripRequests SET Status = 'Deleted' WHERE TripID = ?";
+    $stmt = $con->prepare($updateQuery);
+    $stmt->bind_param('i', $tripID);
+    $result = $stmt->execute();
+    $stmt->close();
 }
-
-// Execute the update query
-$stmt = $con->prepare($updateQuery);
-$stmt->bind_param('i', $tripID);
-$result = $stmt->execute();
-$stmt->close();
 
 if ($result) {
     http_response_code(200); // OK
