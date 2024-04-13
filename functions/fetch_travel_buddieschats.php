@@ -41,10 +41,11 @@ try {
     $resultUsernames = $stmtUsernames->get_result();
 
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        $usernamesByUserId[] = $rowUsernames['Username'];
+        // Assign usernames to the associative array using UserID as key
+        $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
 
-    // Prepare response with success flag and the indexed array of usernames
+    // Prepare response with success flag and the associative array of UserIDs and usernames
     $response = [
         'success' => true,
         'usernames' => $usernamesByUserId
