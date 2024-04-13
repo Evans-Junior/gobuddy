@@ -8,11 +8,11 @@ if (isset($_SESSION['user_id'])) {
 
     // Fetch trips from the database where the logged-in user is the trip creator or requester
     $selectQuery = "SELECT * FROM Trips
-                    WHERE (UserID = $userId
-                        OR TripID IN (SELECT TripID FROM TripRequests WHERE RequesterUserID = $userId AND Status = 'Accepted'))
-                    AND TripStatus != 'Completed'  -- Exclude trips with TripStatus = 'Completed'
-                    AND TimeCreated < NOW()
-                    ORDER BY TripID ASC";
+    WHERE (UserID = $userId
+           OR TripID IN (SELECT TripID FROM TripRequests WHERE RequesterUserID = $userId AND Status = 'Accepted'))
+    AND TripStatus != 'Completed'  -- Exclude trips with TripStatus = 'Completed'
+    AND TimeCreated < NOW()
+    ORDER BY TripID ASC;";
 
     // Use prepared statement to execute the query
     $stmt = $con->prepare($selectQuery);
