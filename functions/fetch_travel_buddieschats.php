@@ -14,7 +14,7 @@ try {
     $userId = $_SESSION['user_id'];
 
     // Step 1: Get all trip IDs for trips the user is involved in either as creator or requester
-    $tripIdsQuery = "SELECT DISTINCT t.TripID, t.UserID AS TripUserID
+    $tripIdsQuery = "SELECT DISTINCT t.TripID
                      FROM Trips t
                      JOIN TripRequests tr ON t.TripID = tr.TripID
                      WHERE t.UserID = ? OR tr.RequesterUserID = ?";
@@ -25,10 +25,8 @@ try {
     $resultTripIds = $stmtTripIds->get_result();
 
     $tripIds = [];
-    $tripUserIds = []; // Array to store TripUserID
     while ($rowTripIds = $resultTripIds->fetch_assoc()) {
         $tripIds[] = $rowTripIds['TripID'];
-        $tripUserIds[$rowTripIds['TripID']] = $rowTripIds['TripUserID']; // Store TripUserID with TripID
     }
     $stmtTripIds->close();
 
@@ -45,12 +43,7 @@ try {
     
 
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        // Check if TripUserID is not equal to the session user ID
-        if ($tripUserIds[$rowUsernames['UserID']] != $_SESSION['user_id']) {
-            // Add TripUserID and its corresponding username to the array
-            $usernamesByUserId[$tripUserIds[$rowUsernames['UserID']]] = $rowUsernames['TripUsername'];
-        }
-        // Add RequesterUserID and its corresponding username to the array
+        // Assign usernames to the associative array using UserID as key
         $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
 
