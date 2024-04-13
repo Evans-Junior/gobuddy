@@ -18,7 +18,7 @@ try {
                          FROM Users u
                          JOIN Trips t ON u.UserID = t.UserID
                          JOIN TripRequests tr ON t.TripID = tr.TripID
-                         WHERE tr.Status = 'Completed'";
+                         WHERE  tr.Status = 'Accepted' or tr.Status = 'Completed'";
 
     $stmtTripCreator = $con->prepare($tripCreatorQuery);
     $stmtTripCreator->execute();
