@@ -1,3 +1,5 @@
+php
+Copy code
 <?php
 session_start();
 include '../settings/connection.php';
@@ -11,68 +13,64 @@ try {
         throw new Exception("Session user ID not set");
     }
 
+    // Check if tripID is provided via POST
+    if (!isset($_POST['tripID'])) {
+        throw new Exception("Trip ID not provided");
+    }
+
     $userId = $_SESSION['user_id'];
-    $tripId = $_POST['tripID']; // Assuming you're passing the tripID through POST
+    $tripId = $_POST['tripID'];
 
     // Step 1: Find UserIDs of trip creators for accepted trips in TripRequests
     $tripCreatorQuery = "SELECT DISTINCT u.UserID, u.Username
                          FROM Users u
                          JOIN Trips t ON u.UserID = t.UserID
                          JOIN TripRequests tr ON t.TripID = tr.TripID
-                         WHERE tr.Status = 'Accepted' AND t.TripID = ?";
+                         WHERE (tr.Status = 'Accepted' OR tr.Status = 'Completed') AND tr.TripID = ?";
 
     $stmtTripCreator = $con->prepare($tripCreatorQuery);
     $stmtTripCreator->bind_param('i', $tripId);
     $stmtTripCreator->execute();
     $resultTripCreator = $stmtTripCreator->get_result();
 
-    // Populate indexed array with usernames
-    $usernames = [];
     while ($rowTripCreator = $resultTripCreator->fetch_assoc()) {
-        $usernames[] = $rowTripCreator['Username'];
+        $usernamesByUserId[$rowTripCreator['UserID']] = $rowTripCreator['Username'];
     }
 
-    // Step 2: Find UserIDs whose trip requests have been accepted by the session user
+    // Step 2: Find UserIDs whose trip requests have been accepted for the specified trip
     $acceptedRequestsQuery = "SELECT DISTINCT u.UserID, u.Username
                               FROM Users u
                               JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                              WHERE tr.Status = 'Accepted' AND tr.TripID = ?";
+                              WHERE tr.Status = 'Completed' AND tr.TripID = ?";
 
     $stmtAcceptedRequests = $con->prepare($acceptedRequestsQuery);
     $stmtAcceptedRequests->bind_param('i', $tripId);
     $stmtAcceptedRequests->execute();
     $resultAcceptedRequests = $stmtAcceptedRequests->get_result();
 
-    // Add usernames to the indexed array
     while ($rowAcceptedRequests = $resultAcceptedRequests->fetch_assoc()) {
-        $usernames[] = $rowAcceptedRequests['Username'];
+        $usernamesByUserId[$rowAcceptedRequests['UserID']] = $rowAcceptedRequests['Username'];
     }
 
-    // Step 3: Find other requesters of the same trip for the session user
+    // Step 3: Find other requesters of the same trip for the specified trip
     $tripRequestersQuery = "SELECT DISTINCT u.UserID, u.Username
                             FROM Users u
                             JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                            WHERE tr.Status = 'Accepted' AND tr.TripID = ? AND tr.RequesterUserID != ?";
+                            WHERE tr.Status = 'Completed' AND tr.TripID = ? AND tr.RequesterUserID != ?";
 
     $stmtTripRequesters = $con->prepare($tripRequestersQuery);
     $stmtTripRequesters->bind_param('ii', $tripId, $userId);
     $stmtTripRequesters->execute();
     $resultTripRequesters = $stmtTripRequesters->get_result();
 
-    // Add usernames to the indexed array
     while ($rowTripRequester = $resultTripRequesters->fetch_assoc()) {
-        $usernames[] = $rowTripRequester['Username'];
-    }
-
-    // Convert indexed array to associative array with user IDs as keys
-    foreach ($usernames as $username) {
-        $usernamesByUserId[array_search($username, $usernames)] = $username;
+        $usernamesByUserId[$rowTripRequester['UserID']] = $rowTripRequester['Username'];
     }
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
     $response = [
         'success' => true,
-        'usernames' => array_values($usernamesByUserId) // Convert associative array to indexed array
+        'usernames' => $usernamesByUserId
     ];
 
     echo json_encode($response);
