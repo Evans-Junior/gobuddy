@@ -572,7 +572,7 @@ function getUsersForTrip(tripID) {
 
     // Make AJAX request to fetch users associated with the trip
     $.ajax({
-        url: '../functions/fetch_travel_buddiesTrip.php',
+        url: '../functions/fetch_travel_buddiescurrent.php',
         type: 'POST',
         dataType: 'json',
         data: { tripID: tripID },
