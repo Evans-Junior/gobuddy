@@ -690,7 +690,7 @@ function CancelTrip(requestID) {
 
 function acceptTrip(requestID) {
     // userName= $('.info h4').val
-    confirm(`Accepting Trip`);
+    // confirm(`Accepting Trip`);
 
     $.ajax({
         url: '../functions/update_trip_request_status.php', // Replace with your PHP script URL

@@ -6,7 +6,7 @@ session_start();
 // echo $_SESSION['username'];
 // echo $_SESSION['user_id'];
 // echo $_SESSION['email'];
-// ensure user is logged in
+include '../functions/clear_data.php';
 if (!(isset($_SESSION["user_id"]))) {
     // redirect to login
     header("Location: ../login/login_view.php");

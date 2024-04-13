@@ -12,15 +12,17 @@ try {
     }
 
     $userId = $_SESSION['user_id'];
+    $tripId = $_POST['tripID']; // Assuming you're passing the tripID through POST
 
     // Step 1: Find UserIDs of trip creators for accepted trips in TripRequests
     $tripCreatorQuery = "SELECT DISTINCT u.UserID, u.Username
                          FROM Users u
                          JOIN Trips t ON u.UserID = t.UserID
                          JOIN TripRequests tr ON t.TripID = tr.TripID
-                         WHERE tr.Status = 'Accepted'";
+                         WHERE tr.Status = 'Accepted' AND t.TripID = ?";
 
     $stmtTripCreator = $con->prepare($tripCreatorQuery);
+    $stmtTripCreator->bind_param('i', $tripId);
     $stmtTripCreator->execute();
     $resultTripCreator = $stmtTripCreator->get_result();
 
@@ -32,14 +34,10 @@ try {
     $acceptedRequestsQuery = "SELECT DISTINCT u.UserID, u.Username
                               FROM Users u
                               JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                              WHERE tr.Status = 'Accepted' AND tr.TripID IN (
-                                  SELECT t.TripID
-                                  FROM Trips t
-                                  WHERE t.UserID = ?
-                              )";
+                              WHERE tr.Status = 'Accepted' AND tr.TripID = ?";
 
     $stmtAcceptedRequests = $con->prepare($acceptedRequestsQuery);
-    $stmtAcceptedRequests->bind_param('i', $userId);
+    $stmtAcceptedRequests->bind_param('i', $tripId);
     $stmtAcceptedRequests->execute();
     $resultAcceptedRequests = $stmtAcceptedRequests->get_result();
 
@@ -51,14 +49,10 @@ try {
     $tripRequestersQuery = "SELECT DISTINCT u.UserID, u.Username
                             FROM Users u
                             JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                            WHERE tr.Status = 'Accepted' AND tr.TripID IN (
-                                SELECT tr2.TripID
-                                FROM TripRequests tr2
-                                WHERE tr2.RequesterUserID = ?
-                            )";
+                            WHERE tr.Status = 'Accepted' AND tr.TripID = ? AND tr.RequesterUserID != ?";
 
     $stmtTripRequesters = $con->prepare($tripRequestersQuery);
-    $stmtTripRequesters->bind_param('i', $userId);
+    $stmtTripRequesters->bind_param('ii', $tripId, $userId);
     $stmtTripRequesters->execute();
     $resultTripRequesters = $stmtTripRequesters->get_result();
 
@@ -69,7 +63,7 @@ try {
     // Prepare response with success flag and the associative array of UserIDs and usernames
     $response = [
         'success' => true,
-        'usernames' => $usernamesByUserId
+        'usernames' => array_values($usernamesByUserId) // Convert associative array to indexed array
     ];
 
     echo json_encode($response);
