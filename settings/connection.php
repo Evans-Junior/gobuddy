@@ -7,7 +7,7 @@
 
 $SERVER= 'localhost:3306';
 $USERNAME= 'root';
-$PASSWORD= '    ';
+$PASSWORD= '';
 $DATABASE='goBuddy';
 
 $con =new mysqli($SERVER,$USERNAME,$PASSWORD,$DATABASE) or die("The database was not created");
