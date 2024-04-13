@@ -478,7 +478,6 @@ function deleteTrip(tripID, userID) {
 }
 
 function reviewSubmit() {
-    // event.preventDefault(); // Prevent default form submission
 
     var reviewedPID = document.getElementById('reviewerName').value;
     var reviewText = document.getElementById('reviewText').value;

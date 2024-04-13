@@ -23,7 +23,8 @@ if (isset($_POST['tripID'])) {
             // Update TripRequests status to 'Completed' for the specified trip in TripRequests table
             $updateRequestsQuery = "UPDATE TripRequests 
                                     SET Status = 'Completed' 
-                                    WHERE TripID = ?";
+                                    WHERE TripID = ? 
+                                    AND Status = 'Accepted'";
             
             // Use prepared statement for TripRequests table
             $stmtRequests = $con->prepare($updateRequestsQuery);

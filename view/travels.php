@@ -334,6 +334,7 @@ color: #999; /* Placeholder text color */
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 0.5rem;
 }
 
 .message-request-button:hover {
@@ -470,32 +471,38 @@ color: #999; /* Placeholder text color */
         <div class="booked-trips">
             <h3>Booked Trips</h3>
             <div class="cards">
-            <?php
-                // Check if there are trips available
-                if (!empty($trips)) {
-                    // Iterate over each trip
-                    foreach ($trips as $trip) {
-                        echo "<div class='card' onclick='getUserInfo({$trip['UserID']})'>
-                                <h5>{$trip['Destination']}</h5>
-                                <p>Date: {$trip['Date']}</p>
-                                <p id='the_person_destination'>Location: {$trip['Location']}</p>
-                                <p>Buddy: {$trip['Username']}</p>
-                                <div class='details'>
-                                    <p>Start: <strong>{$trip['Start']}</strong></p>
-                                    <p>End: <strong>{$trip['End']}</strong></p>
-                                    <p>Seats: <strong id='tripseats'>{$trip['SeatsAvailable']}</strong></p>
-                                    <input type='hidden' id='UserInfo' value='{$trip['UserID']}'>
-                                    <input type='hidden' class='tripID' value='{$trip['TripID']}'>
-                                </div>
-                                <button onclick='openWideCard({$trip['TripID']}, {$trip['UserID']})'>Reach out</button>
-                            </div>";
-                    }
-                } else {
-                    // No trips found
-                    echo "<p>No trips found.</p>";
-                }
-                ?>
-            </div>
+    <?php
+    // Check if there are trips available
+    if (!empty($trips)) {
+        // Iterate over each trip
+        foreach ($trips as $trip) {
+            echo "<div class='card' onclick='getUserInfo({$trip['UserID']})'>
+                    <h5>{$trip['Destination']}</h5>
+                    <p>Date: {$trip['Date']}</p>
+                    <p id='the_person_destination'>Location: {$trip['Location']}</p>
+                    <p>Buddy: {$trip['Username']}</p>
+                    <div class='details'>
+                        <p>Start: <strong>{$trip['Start']}</strong></p>
+                        <p>End: <strong>{$trip['End']}</strong></p>
+                        <p>Seats: <strong id='tripseats'>{$trip['SeatsAvailable']}</strong></p>
+                        <input type='hidden' id='UserInfo' value='{$trip['UserID']}'>
+                        <input type='hidden' class='tripID' value='{$trip['TripID']}'>
+                    </div>";
+
+            // Check if the current trip's userID is not the same as the logged-in user's userID
+            if ($trip['UserID'] != $_SESSION['user_id']) {
+                echo "<button onclick='openWideCard({$trip['TripID']}, {$trip['UserID']})'>Reach out</button>";
+            }
+
+            echo "</div>"; // Close the card div
+        }
+    } else {
+        // No trips found
+        echo "<p>No trips found.</p>";
+    }
+    ?>
+</div>
+
         </div>
     </div>
     
@@ -524,7 +531,7 @@ color: #999; /* Placeholder text color */
                 </div>
                 <!-- Message request button -->
                 <div>
-                <button onclick='makeARequest()' class="message-request-button">Message Request</button>
+                <button onclick='makeARequest()' class="message-request-button">Send Request</button>
                 <!-- <button class="message-request-button">Close</button> -->
 
                 </div>
