@@ -21,7 +21,7 @@ function getTripsWithUserData() {
                     SELECT TripID 
                     FROM TripRequests
                     WHERE RequesterUserID = $userId 
-                    AND Status = 'Active'
+                    AND Status = 'Accepted'
                 )
                 AND Trips.UserID <> $userId -- Trips where user is a requester and not the creator
             )
