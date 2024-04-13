@@ -732,7 +732,7 @@ function fetchTripRequests() {
 
     // Make an AJAX request
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../functions/fetch_trip_requests.php', true);
+    xhr.open('GET', '../functions/fetch_trip_requests_notification.php', true);
 
     xhr.onload = function() {
         if (xhr.status == 200) {

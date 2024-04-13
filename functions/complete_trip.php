@@ -11,7 +11,7 @@ if (isset($_POST['tripID'])) {
                         SET TripStatus = 'Completed', 
                             TimeCreated = CURRENT_TIMESTAMP
                         WHERE TripID = ?";
-    
+
     // Use prepared statement to prevent SQL injection for Trips table
     $stmtTrip = $con->prepare($updateTripQuery);
     $stmtTrip->bind_param('i', $tripID);
@@ -25,15 +25,21 @@ if (isset($_POST['tripID'])) {
                                     SET Status = 'Completed' 
                                     WHERE TripID = ? 
                                     AND Status = 'Accepted'";
-            
+
             // Use prepared statement for TripRequests table
             $stmtRequests = $con->prepare($updateRequestsQuery);
             $stmtRequests->bind_param('i', $tripID);
 
             // Execute the update query for TripRequests
             if ($stmtRequests->execute()) {
-                // Send success response back to the frontend
-                echo json_encode(['success' => true]);
+                // Check if any rows were affected (query was successful)
+                if ($stmtRequests->affected_rows > 0) {
+                    // Send success response back to the frontend
+                    echo json_encode(['success' => true]);
+                } else {
+                    // No rows were updated in TripRequests
+                    echo json_encode(['success' => false, 'error' => 'No trip requests found for the specified trip']);
+                }
             } else {
                 // Error occurred while updating TripRequests
                 echo json_encode(['success' => false, 'error' => 'Error updating TripRequests']);
@@ -42,7 +48,7 @@ if (isset($_POST['tripID'])) {
             // Close TripRequests statement
             $stmtRequests->close();
         } else {
-            // No rows were updated (tripID not found or no changes made)
+            // No rows were updated in Trips
             echo json_encode(['success' => false, 'error' => 'No trip found with the specified ID']);
         }
     } else {
