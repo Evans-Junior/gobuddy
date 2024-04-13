@@ -36,7 +36,7 @@ try {
                        FROM Users u
                        JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
                        JOIN Trips t ON tr.TripID = t.TripID
-                       WHERE (tr.Status IN ('Accepted', 'Completed', 'Deleted') OR t.TripStatus = 'Active') AND tr.TripID IN (".implode(",", $tripIds).")";
+                       WHERE (tr.Status IN ('Accepted', 'Completed', 'Deleted') OR t.TripStatus IN ('Accepted', 'Completed', 'Deleted','Active') AND tr.TripID IN (".implode(",", $tripIds).")";
 
     $stmtUsernames = $con->prepare($usernamesQuery);
     $stmtUsernames->execute();
