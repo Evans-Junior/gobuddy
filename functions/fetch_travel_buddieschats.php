@@ -14,7 +14,7 @@ try {
     $userId = $_SESSION['user_id'];
 
     // Step 1: Get all trip IDs for trips the user is involved in either as creator or requester
-    $tripIdsQuery = "SELECT DISTINCT t.TripID
+    $tripIdsQuery = "SELECT DISTINCT t.TripID, t.UserID AS TripUserID
                      FROM Trips t
                      JOIN TripRequests tr ON t.TripID = tr.TripID
                      WHERE t.UserID = ? OR tr.RequesterUserID = ?";
@@ -25,18 +25,20 @@ try {
     $resultTripIds = $stmtTripIds->get_result();
 
     $tripIds = [];
+    $tripUserIds = []; // Array to store TripUserID
     while ($rowTripIds = $resultTripIds->fetch_assoc()) {
         $tripIds[] = $rowTripIds['TripID'];
+        $tripUserIds[$rowTripIds['TripID']] = $rowTripIds['TripUserID']; // Store TripUserID with TripID
     }
     $stmtTripIds->close();
 
     // Step 2: Get usernames associated with the obtained trip IDs
-    $usernamesQuery = "SELECT DISTINCT u.UserID AS RequesterUserID, u.Username AS RequesterUsername, 
-        t.UserID AS TripUserID, t.Username AS TripUsername
-    FROM Users u
-    JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-    JOIN Trips t ON tr.TripID = t.TripID
-    WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
+    $usernamesQuery = "SELECT DISTINCT u.UserID, u.Username
+                       FROM Users u
+                       JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
+                       JOIN Trips t ON tr.TripID = t.TripID
+                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
+
     $stmtUsernames = $con->prepare($usernamesQuery);
     $stmtUsernames->execute();
     $resultUsernames = $stmtUsernames->get_result();
@@ -44,12 +46,12 @@ try {
 
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
         // Check if TripUserID is not equal to the session user ID
-        if ($rowUsernames['TripUserID'] != $_SESSION['user_id']) {
+        if ($tripUserIds[$rowUsernames['UserID']] != $_SESSION['user_id']) {
             // Add TripUserID and its corresponding username to the array
-            $usernamesByUserId[$rowUsernames['TripUserID']] = $rowUsernames['TripUsername'];
+            $usernamesByUserId[$tripUserIds[$rowUsernames['UserID']]] = $rowUsernames['TripUsername'];
         }
         // Add RequesterUserID and its corresponding username to the array
-        $usernamesByUserId[$rowUsernames['RequesterUserID']] = $rowUsernames['RequesterUsername'];
+        $usernamesByUserId[$rowUsernames['UserID']] = $rowUsernames['Username'];
     }
 
     // Prepare response with success flag and the associative array of UserIDs and usernames
