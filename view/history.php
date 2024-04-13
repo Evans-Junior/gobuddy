@@ -604,6 +604,9 @@ function getUsersForTrip(tripID) {
                         if (userId != currentUserId) {
                             // Create a new <option> element
                             var option = document.createElement('option');
+                            console.log('User I---------D:', userId);
+                            console.log('username---------------:', username);
+
                             option.value = userId; // Set option value to the user ID
                             option.textContent = username; // Set option text to the username
 
