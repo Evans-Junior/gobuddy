@@ -32,31 +32,30 @@ try {
 
     // Step 2: Get usernames associated with the obtained trip IDs
     $usernamesQuery = "SELECT DISTINCT u.UserID AS RequesterUserID, u.Username AS RequesterUsername, 
-                               t.UserID AS TripUserID, t.Username AS TripUsername
-                       FROM Users u
-                       JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
-                       JOIN Trips t ON tr.TripID = t.TripID
-                       WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
-
+        t.UserID AS TripUserID, t.Username AS TripUsername
+    FROM Users u
+    JOIN TripRequests tr ON u.UserID = tr.RequesterUserID
+    JOIN Trips t ON tr.TripID = t.TripID
+    WHERE tr.Status IN ('Accepted', 'Completed', 'Deleted') AND tr.TripID IN (".implode(",", $tripIds).")";
     $stmtUsernames = $con->prepare($usernamesQuery);
     $stmtUsernames->execute();
     $resultUsernames = $stmtUsernames->get_result();
+    
 
-    $usernames = [];
     while ($rowUsernames = $resultUsernames->fetch_assoc()) {
-        // Store usernames in an array
-        $usernames[] = [
-            'RequesterUserID' => $rowUsernames['RequesterUserID'],
-            'RequesterUsername' => $rowUsernames['RequesterUsername'],
-            'TripUserID' => $rowUsernames['TripUserID'],
-            'TripUsername' => $rowUsernames['TripUsername']
-        ];
+        // Check if TripUserID is not equal to the session user ID
+        if ($rowUsernames['TripUserID'] != $_SESSION['user_id']) {
+            // Add TripUserID and its corresponding username to the array
+            $usernamesByUserId[$rowUsernames['TripUserID']] = $rowUsernames['TripUsername'];
+        }
+        // Add RequesterUserID and its corresponding username to the array
+        $usernamesByUserId[$rowUsernames['RequesterUserID']] = $rowUsernames['RequesterUsername'];
     }
 
-    // Prepare response with success flag and the array of usernames
+    // Prepare response with success flag and the associative array of UserIDs and usernames
     $response = [
         'success' => true,
-        'usernames' => $usernames
+        'usernames' => $usernamesByUserId
     ];
 
     echo json_encode($response);
