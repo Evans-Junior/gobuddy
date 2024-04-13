@@ -1329,6 +1329,7 @@ function getTravelBuddies(tripID) {
                 // Iterate over the usernames in the response object
                 Object.values(response.usernames).forEach(function(username) {
                     var listItem = document.createElement('li');
+                    
                     listItem.textContent = username;
                     tripParticipantsList.appendChild(listItem);
                 });
