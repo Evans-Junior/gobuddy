@@ -108,7 +108,7 @@ $con->close();
     e.preventDefault();
     var usernameRegex = /^[a-zA-Z0-9_ ]{3,20}$/;
     var emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,}$/;
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/;
     
     if (!username.match(usernameRegex)) {
       Swal.fire({
