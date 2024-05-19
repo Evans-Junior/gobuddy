@@ -177,7 +177,7 @@ $con->close();
     <input type="tel" name="phone" pattern="^\+(?:[0-9] ?){6,14}[0-9]$" placeholder="Phone Number" title="Invalid phone number (use international format)" required>
     <div class="input-group">
       <textarea  type="text" name="bio" placeholder="Bio" required pattern="^[a-zA-Z0-9\s\-',.!?:;\(\)&$%@#]*$"></textarea>
-    <input type="password" id="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d$^]{8,}$" name="password" placeholder="Password" title="Invalid password (at least one lowercase letter, one uppercase letter, one digit, and minimum 8 characters)" required>
+    <input type="password" id="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d$^]{8,}$" name="password" placeholder="Password" title="Invalid password (at least one lowercase letter, one uppercase letter, one number and atleast a special character." required>
         <i id="password-toggle-icon" class="fas fa-eye-slash" onclick="togglePassword()"></i>
     </div>
     <button type="submit">Sign Up</button>
